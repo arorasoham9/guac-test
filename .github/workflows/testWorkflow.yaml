@@ -1,15 +1,22 @@
-name: Test Workflow
+name: Create and Upload Artifact
 
 on: 
   workflow_dispatch:
+  push:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Run tests
-        run: |
-          echo "Running tests..."
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create text file
+      run: echo "Hello, World!" > output.txt
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: output-file
+        path: output.txt
