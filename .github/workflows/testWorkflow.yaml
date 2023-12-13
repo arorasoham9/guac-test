@@ -9,23 +9,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Create SBOM
+      run: |
+        echo '{
+          "SPDXID": "SPDXRef-DOCUMENT",
+          "spdxVersion": "SPDX-2.2",
+          "creationInfo": {
+            "created": "2022-01-01T00:00:00Z",
+            "creators": ["Person: John Doe"],
+            "licenseListVersion": "3.6"
+          },
+          "name": "Simple-SPDX",
+          "dataLicense": "CC0-1.0",
+          "documentNamespace": "http://spdx.org/spdxdocs/spdx-example-1",
+          "documentDescribes": ["SPDXRef-Package"],
+          "packages": [{
+            "SPDXID": "SPDXRef-Package",
+            "name": "simple-package",
+            "versionInfo": "1.0",
+            "packageFileName": "simple-package-1.0",
+            "downloadLocation": "NOASSERTION",
+            "filesAnalyzed": false,
+            "packageVerificationCode": {
+              "value": "d6a770ba38583ed4bb4525bd96e50461655d2758",
+              "excludedFileNames": ["excluded_file"]
+            },
+            "licenseConcluded": "NOASSERTION",
+            "licenseDeclared": "NOASSERTION",
+            "licenseComments": "No comments",
+            "copyrightText": "2022 John Doe"
+          }]
+        }' > sbom.json
 
-    - name: Create text file
-      run: echo "Hello, World!" > output.txt
-
-    - name: Upload artifact
+    - name: Upload SBOM
       uses: actions/upload-artifact@v2
       with:
-        name: output-file
-        path: output.txt
-
-    - name: Create another text file
-      run: echo "Hello, again!" > output2.txt
-
-    - name: Upload another artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: output-file-2
-        path: output2.txt
+        name: sbom
+        path: sbom.json
