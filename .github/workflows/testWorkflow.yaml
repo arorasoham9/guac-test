@@ -9,37 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Create SBOM
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Copy SBOM to Working Directory
       run: |
-        echo '{
-          "SPDXID": "SPDXRef-DOCUMENT",
-          "spdxVersion": "SPDX-2.2",
-          "creationInfo": {
-            "created": "2022-01-01T00:00:00Z",
-            "creators": ["Person: John Doe"],
-            "licenseListVersion": "3.6"
-          },
-          "name": "Simple-SPDX",
-          "dataLicense": "CC0-1.0",
-          "documentNamespace": "http://spdx.org/spdxdocs/spdx-example-1",
-          "documentDescribes": ["SPDXRef-Package"],
-          "packages": [{
-            "SPDXID": "SPDXRef-Package",
-            "name": "simple-package",
-            "versionInfo": "1.0",
-            "packageFileName": "simple-package-1.0",
-            "downloadLocation": "NOASSERTION",
-            "filesAnalyzed": false,
-            "packageVerificationCode": {
-              "value": "d6a770ba38583ed4bb4525bd96e50461655d2758",
-              "excludedFileNames": ["excluded_file"]
-            },
-            "licenseConcluded": "NOASSERTION",
-            "licenseDeclared": "NOASSERTION",
-            "licenseComments": "No comments",
-            "copyrightText": "2022 John Doe"
-          }]
-        }' > sbom.json
+        cp ./some-sboms/kube-addon-manager-v9.1.1.sha256-c0ed56727cd78700034f2f863d774412c78681fb6535456f5e5c420f4248c5a1.syft.0.58.0.spdx.json sbom.json
 
     - name: Upload SBOM
       uses: actions/upload-artifact@v2
